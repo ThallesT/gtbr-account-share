@@ -2,6 +2,7 @@ package com.gtbr.gtbraccountshare.handler;
 
 import com.gtbr.gtbraccountshare.model.AccountShare;
 import com.gtbr.gtbraccountshare.service.AccountShareService;
+import com.gtbr.gtbraccountshare.service.RequestService;
 import com.gtbr.gtbraccountshare.utils.MessageUtils;
 import com.gtbr.gtbraccountshare.utils.SpringUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -14,9 +15,11 @@ import java.util.concurrent.TimeUnit;
 public class CommandHandler {
 
     private final AccountShareService accountShareService;
+    private final RequestService requestService;
 
     public CommandHandler() {
         this.accountShareService = SpringUtils.getBean(AccountShareService.class);
+        this.requestService = SpringUtils.getBean(RequestService.class);
     }
 
     public void handle(MessageReceivedEvent messageReceivedEvent) {
@@ -51,6 +54,12 @@ public class CommandHandler {
                 case "buscar" -> {
                     String platform = fullMessage.split(" ")[1];
                     AccountShare accountShare = accountShareService.findPlatform(platform);
+                    requestService.creteRequest(accountShare,
+                            messageReceivedEvent.getChannel().getId(),
+                            messageReceivedEvent.getChannel().getName(),
+                            messageReceivedEvent.getAuthor().getId(),
+                            messageReceivedEvent.getAuthor().getAsTag());
+
 
                     MessageEmbed messageEmbed = new EmbedBuilder()
                             .setTitle(accountShare.getPlatform())
