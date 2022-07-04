@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.awt.*;
+import java.util.concurrent.TimeUnit;
 
 public class CommandHandler {
 
@@ -77,18 +78,23 @@ public class CommandHandler {
                         }
                         messageReceivedEvent.getMessage().delete().queue();
                         message.delete().queue();
-
-
                     });
 
                 }
             }
-        } catch (RuntimeException exception){
+        } catch (RuntimeException exception) {
             MessageEmbed messageEmbed = new EmbedBuilder().setTitle("Erro!").setDescription(exception.getMessage()).build();
 
-            messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed).queue();
-
+            messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed).queue(message -> {
+                try {
+                    TimeUnit.SECONDS.sleep(10);
+                } catch (InterruptedException e) {
+                    message.delete().queue();
+                    messageReceivedEvent.getMessage().delete().queue();
+                }
+                message.delete().queue();
+                messageReceivedEvent.getMessage().delete().queue();
+            });
         }
     }
-
 }
