@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    url: ${URL}
+    password: ${PASSWORD}
+    username: ${USERNAME}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: false
+  jpa:
+    hibernate:
+      ddl-auto: update
+  main:
+    allow-bean-definition-overriding: true
+
+discord:
+  token: ${DISCORD_TOKEN}
