@@ -81,6 +81,27 @@ public class CommandHandler {
                     });
 
                 }
+                case "help" -> {
+                    MessageEmbed messageEmbed = new EmbedBuilder().setTitle("Help commands")
+                            .addField("?share <plataforma> <login> <senha> <temAutenticador?True ou False>", "Registra a conta na base de dados.", false)
+                            .addField("?buscar <Plataforma>", "Busca a conta da plataforma desejada", false)
+                            .addField("?help", "Mostra os comandos do bot", false)
+                            .setColor(Color.YELLOW)
+                            .setThumbnail("https://cdn-icons-png.flaticon.com/512/1289/1289376.png")
+                            .build();
+
+                    messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed).queue(message -> {
+                        try {
+                            TimeUnit.SECONDS.sleep(20);
+                        }catch (InterruptedException e){
+                            message.delete().queue();
+                            messageReceivedEvent.getMessage().delete().queue();
+                        }
+                        message.delete().queue();
+                        messageReceivedEvent.getMessage().delete().queue();
+                    });
+
+                }
             }
         } catch (RuntimeException exception) {
             MessageEmbed messageEmbed = new EmbedBuilder().setTitle("Erro!").setDescription(exception.getMessage()).build();
