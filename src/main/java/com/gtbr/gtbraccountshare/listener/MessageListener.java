@@ -1,6 +1,7 @@
 package com.gtbr.gtbraccountshare.listener;
 
 import com.gtbr.gtbraccountshare.handler.CommandHandler;
+import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -27,5 +28,12 @@ public class MessageListener extends ListenerAdapter {
         ) {
             commandHandler.handle(messageReceivedEvent);
         }
+    }
+
+    @Override
+    public void onReady(@NotNull ReadyEvent event) {
+        event.getJDA().getGuilds().forEach(guild -> {
+            guild.findMembers(member -> member.getRoles().stream().anyMatch(role -> role.getIdLong() == idGTBRRole));
+        });
     }
 }

@@ -15,7 +15,7 @@ public class RequestService {
 
     private final RequestRepository requestRepository;
 
-    public void creteRequest(AccountShare accountShare, String channelId, String channelName, String userDiscordId, String userDiscordTag) {
+    public void createRequest(AccountShare accountShare, String channelId, String channelName, String userDiscordId, String userDiscordTag) {
         requestRepository.save(Request.builder()
                 .id(UUID.randomUUID())
                 .accountShare(accountShare)
