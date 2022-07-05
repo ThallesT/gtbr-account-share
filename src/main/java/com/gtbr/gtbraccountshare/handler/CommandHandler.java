@@ -1,8 +1,10 @@
 package com.gtbr.gtbraccountshare.handler;
 
 import com.gtbr.gtbraccountshare.model.AccountShare;
+import com.gtbr.gtbraccountshare.model.Thumbnails;
 import com.gtbr.gtbraccountshare.service.AccountShareService;
 import com.gtbr.gtbraccountshare.service.RequestService;
+import com.gtbr.gtbraccountshare.service.ThumbnailsService;
 import com.gtbr.gtbraccountshare.utils.MessageUtils;
 import com.gtbr.gtbraccountshare.utils.SpringUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
@@ -16,17 +18,18 @@ public class CommandHandler {
 
     private final AccountShareService accountShareService;
     private final RequestService requestService;
+    private final ThumbnailsService thumbnailsService;
 
     public CommandHandler() {
         this.accountShareService = SpringUtils.getBean(AccountShareService.class);
         this.requestService = SpringUtils.getBean(RequestService.class);
+        this.thumbnailsService = SpringUtils.getBean(ThumbnailsService.class);
     }
 
     public void handle(MessageReceivedEvent messageReceivedEvent) {
         var fullMessage = messageReceivedEvent.getMessage().getContentRaw();
         var command = MessageUtils.getCommandFromMessage(fullMessage);
         var jda = messageReceivedEvent.getJDA();
-
 
         try {
             switch (command) {
@@ -54,7 +57,7 @@ public class CommandHandler {
                 case "buscar" -> {
                     String platform = fullMessage.split(" ")[1];
                     AccountShare accountShare = accountShareService.findPlatform(platform);
-                    requestService.creteRequest(accountShare,
+                    requestService.createRequest(accountShare,
                             messageReceivedEvent.getChannel().getId(),
                             messageReceivedEvent.getChannel().getName(),
                             messageReceivedEvent.getAuthor().getId(),
@@ -69,8 +72,9 @@ public class CommandHandler {
                             .addField("Password", accountShare.getPassword(), true)
                             .addBlankField(false)
                             .addField("Tem autenticador / 2FA", accountShare.isAuthenticator() ? "Sim" : "Nao", true)
-                            .addField("Dono da conta", jda.getUserById(accountShare.getOwner()).getAsMention(), true)
+                            .addField("Dono da conta","", true)
                             .setColor(Color.BLUE)
+                            .setThumbnail(thumbnailsService.findThumbnail(accountShare.getPlatform()).getImageUrl())
                             .build();
 
                     if (!messageReceivedEvent.getChannel().getId().equals("993348110652805182"))
@@ -113,6 +117,7 @@ public class CommandHandler {
                 }
             }
         } catch (RuntimeException exception) {
+            exception.printStackTrace();
             MessageEmbed messageEmbed = new EmbedBuilder().setTitle("Erro!").setDescription(exception.getMessage()).build();
 
             messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed).queue(message -> {
