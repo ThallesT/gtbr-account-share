@@ -1,5 +1,7 @@
 package com.gtbr.gtbraccountshare.handler;
 
+import com.gtbr.gtbraccountshare.GtbrAccountShareApplication;
+import com.gtbr.gtbraccountshare.listener.MessageListener;
 import com.gtbr.gtbraccountshare.model.AccountShare;
 import com.gtbr.gtbraccountshare.model.Thumbnails;
 import com.gtbr.gtbraccountshare.service.AccountShareService;
@@ -10,6 +12,8 @@ import com.gtbr.gtbraccountshare.utils.SpringUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.aspectj.bridge.Message;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
@@ -20,10 +24,12 @@ public class CommandHandler {
     private final RequestService requestService;
     private final ThumbnailsService thumbnailsService;
 
+
     public CommandHandler() {
         this.accountShareService = SpringUtils.getBean(AccountShareService.class);
         this.requestService = SpringUtils.getBean(RequestService.class);
         this.thumbnailsService = SpringUtils.getBean(ThumbnailsService.class);
+
     }
 
     public void handle(MessageReceivedEvent messageReceivedEvent) {
@@ -115,7 +121,22 @@ public class CommandHandler {
                     });
 
                 }
-            }
+                default -> {
+                    messageReceivedEvent.getChannel().sendMessage("Esse comando não foi reconhecido, para receber ajuda use o comando: ```?help```").queue(message -> {
+                        try {
+                            TimeUnit.SECONDS.sleep(20);
+
+                        }catch (InterruptedException e){
+                            message.delete().queue();
+                            messageReceivedEvent.getMessage().delete().queue();
+                        }
+                        message.delete().queue();
+                        messageReceivedEvent.getMessage().delete().queue();
+                    });
+
+                }
+
+             }
         } catch (RuntimeException exception) {
             exception.printStackTrace();
             MessageEmbed messageEmbed = new EmbedBuilder().setTitle("Erro!").setDescription(exception.getMessage()).build();
