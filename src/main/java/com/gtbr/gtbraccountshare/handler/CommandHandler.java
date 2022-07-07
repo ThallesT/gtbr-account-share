@@ -1,19 +1,15 @@
 package com.gtbr.gtbraccountshare.handler;
 
-import com.gtbr.gtbraccountshare.GtbrAccountShareApplication;
-import com.gtbr.gtbraccountshare.listener.MessageListener;
 import com.gtbr.gtbraccountshare.model.AccountShare;
-import com.gtbr.gtbraccountshare.model.Thumbnails;
 import com.gtbr.gtbraccountshare.service.AccountShareService;
 import com.gtbr.gtbraccountshare.service.RequestService;
 import com.gtbr.gtbraccountshare.service.ThumbnailsService;
 import com.gtbr.gtbraccountshare.utils.MessageUtils;
+import com.gtbr.gtbraccountshare.utils.SleepUtils;
 import com.gtbr.gtbraccountshare.utils.SpringUtils;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import org.aspectj.bridge.Message;
-import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.concurrent.TimeUnit;
@@ -24,12 +20,10 @@ public class CommandHandler {
     private final RequestService requestService;
     private final ThumbnailsService thumbnailsService;
 
-
     public CommandHandler() {
         this.accountShareService = SpringUtils.getBean(AccountShareService.class);
         this.requestService = SpringUtils.getBean(RequestService.class);
         this.thumbnailsService = SpringUtils.getBean(ThumbnailsService.class);
-
     }
 
     public void handle(MessageReceivedEvent messageReceivedEvent) {
@@ -52,12 +46,7 @@ public class CommandHandler {
 
                     messageReceivedEvent.getMessage().delete().queue();
                     messageReceivedEvent.getChannel().sendMessage("A conta foi salva com sucesso!").queue(message -> {
-                        try {
-                            Thread.sleep(1000);
-                        } catch (InterruptedException e) {
-                            message.delete().queue();
-                        }
-                        message.delete().queue();
+                        SleepUtils.sleep(1, message, messageReceivedEvent);
                     });
                 }
                 case "buscar" -> {
@@ -78,7 +67,7 @@ public class CommandHandler {
                             .addField("Password", accountShare.getPassword(), true)
                             .addBlankField(false)
                             .addField("Tem autenticador / 2FA", accountShare.isAuthenticator() ? "Sim" : "Nao", true)
-                            .addField("Dono da conta","", true)
+                            .addField("Dono da conta", "", true)
                             .setColor(Color.BLUE)
                             .setThumbnail(thumbnailsService.findThumbnail(accountShare.getPlatform()).getImageUrl())
                             .build();
@@ -90,13 +79,7 @@ public class CommandHandler {
                                 .queue();
 
                     jda.getTextChannelById(993348110652805182L).sendMessageEmbeds(messageEmbed).queue(message -> {
-                        try {
-                            Thread.sleep(20000);
-                        } catch (InterruptedException e) {
-                            message.delete().queue();
-                        }
-                        messageReceivedEvent.getMessage().delete().queue();
-                        message.delete().queue();
+                        SleepUtils.sleep(20, message, messageReceivedEvent);
                     });
 
                 }
@@ -110,46 +93,23 @@ public class CommandHandler {
                             .build();
 
                     messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed).queue(message -> {
-                        try {
-                            TimeUnit.SECONDS.sleep(20);
-                        }catch (InterruptedException e){
-                            message.delete().queue();
-                            messageReceivedEvent.getMessage().delete().queue();
-                        }
-                        message.delete().queue();
-                        messageReceivedEvent.getMessage().delete().queue();
+                        SleepUtils.sleep(20, message, messageReceivedEvent);
                     });
-
                 }
                 default -> {
                     messageReceivedEvent.getChannel().sendMessage("Esse comando não foi reconhecido, para receber ajuda use o comando: ```?help```").queue(message -> {
-                        try {
-                            TimeUnit.SECONDS.sleep(20);
-
-                        }catch (InterruptedException e){
-                            message.delete().queue();
-                            messageReceivedEvent.getMessage().delete().queue();
-                        }
-                        message.delete().queue();
-                        messageReceivedEvent.getMessage().delete().queue();
+                        SleepUtils.sleep(20, message, messageReceivedEvent);
                     });
 
                 }
 
-             }
+            }
         } catch (RuntimeException exception) {
             exception.printStackTrace();
             MessageEmbed messageEmbed = new EmbedBuilder().setTitle("Erro!").setDescription(exception.getMessage()).build();
 
             messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed).queue(message -> {
-                try {
-                    TimeUnit.SECONDS.sleep(10);
-                } catch (InterruptedException e) {
-                    message.delete().queue();
-                    messageReceivedEvent.getMessage().delete().queue();
-                }
-                message.delete().queue();
-                messageReceivedEvent.getMessage().delete().queue();
+               SleepUtils.sleep(10, message, messageReceivedEvent);
             });
         }
     }
