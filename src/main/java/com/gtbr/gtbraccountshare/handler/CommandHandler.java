@@ -12,7 +12,6 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 import java.awt.*;
-import java.util.concurrent.TimeUnit;
 
 public class CommandHandler {
 
@@ -109,7 +108,7 @@ public class CommandHandler {
             MessageEmbed messageEmbed = new EmbedBuilder().setTitle("Erro!").setDescription(exception.getMessage()).build();
 
             messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed).queue(message -> {
-               SleepUtils.sleep(10, message, messageReceivedEvent);
+                SleepUtils.sleep(10, message, messageReceivedEvent);
             });
         }
     }
