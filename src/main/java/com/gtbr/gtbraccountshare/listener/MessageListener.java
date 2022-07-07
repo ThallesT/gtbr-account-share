@@ -32,8 +32,9 @@ public class MessageListener extends ListenerAdapter {
 
     @Override
     public void onReady(@NotNull ReadyEvent event) {
-        event.getJDA().getGuilds().forEach(guild -> {
-            guild.findMembers(member -> member.getRoles().stream().anyMatch(role -> role.getIdLong() == idGTBRRole));
-        });
+        event.getJDA().getGuilds()
+                .forEach(guild -> guild.findMembers(member -> member.getRoles()
+                        .stream()
+                        .anyMatch(role -> role.getIdLong() == idGTBRRole)));
     }
 }
