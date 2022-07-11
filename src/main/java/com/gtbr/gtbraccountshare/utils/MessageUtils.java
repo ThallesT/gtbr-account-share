@@ -4,7 +4,7 @@ import com.gtbr.gtbraccountshare.model.AccountShare;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 
-import java.awt.*;
+import java.awt.Color;
 
 public class MessageUtils {
 

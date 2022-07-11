@@ -12,12 +12,10 @@ public class ThumbnailsService {
 
     private final ThumbnailsRepository thumbnailsRepository;
 
-    public Thumbnails findThumbnail (String platform){
+    public Thumbnails findThumbnail(String platform) {
 
-    return thumbnailsRepository.findByPlatform(platform).orElse(Thumbnails.builder()
-            .imageUrl("https://www.oversodoinverso.com.br/wp-content/uploads/2020/08/template.png").build());
+        return thumbnailsRepository.findByPlatform(platform)
+                .orElse(Thumbnails.builder()
+                        .imageUrl("https://www.oversodoinverso.com.br/wp-content/uploads/2020/08/template.png").build());
     }
-
-
-
 }

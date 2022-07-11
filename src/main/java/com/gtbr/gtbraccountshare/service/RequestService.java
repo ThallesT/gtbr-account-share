@@ -16,8 +16,8 @@ public class RequestService {
 
     private final RequestRepository requestRepository;
 
-    public void createRequest(AccountShare accountShare, MessageReceivedEvent messageReceivedEvent) {
-        requestRepository.save(Request.builder()
+    public Request createRequest(AccountShare accountShare, MessageReceivedEvent messageReceivedEvent) {
+        return requestRepository.save(Request.builder()
                 .id(UUID.randomUUID())
                 .accountShare(accountShare)
                 .channelId(messageReceivedEvent.getChannel().getId())
@@ -27,5 +27,4 @@ public class RequestService {
                 .requestedAt(LocalDateTime.now())
                 .build());
     }
-
 }
