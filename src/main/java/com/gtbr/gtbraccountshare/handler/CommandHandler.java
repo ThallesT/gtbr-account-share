@@ -13,6 +13,8 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
+import java.util.List;
+
 import static com.gtbr.gtbraccountshare.utils.Constants.ACCOUNT_SHARE_CHANNEL_ID;
 
 public class CommandHandler {
@@ -35,8 +37,9 @@ public class CommandHandler {
         try {
             switch (command) {
                 case "share" -> shareHandle(fullMessage, messageReceivedEvent);
-                case "buscar" -> buscarHandle(fullMessage, messageReceivedEvent, jda);
+                case "find" -> buscarHandle(fullMessage, messageReceivedEvent, jda);
                 case "help" -> helpHandle(messageReceivedEvent);
+                case "list" -> listHandle();
                 default -> messageReceivedEvent.getChannel()
                         .sendMessage("Esse comando não foi reconhecido, para receber ajuda use o comando: ```?help```")
                         .queue(message -> SleepUtils.sleep(20, message, messageReceivedEvent));
@@ -89,5 +92,8 @@ public class CommandHandler {
         MessageEmbed messageEmbed = MessageUtils.buildHelpMessage();
         messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed)
                 .queue(message -> SleepUtils.sleep(20, message, messageReceivedEvent));
+    }
+    private void listHandle(){
+        accountShareService.findAll();
     }
 }

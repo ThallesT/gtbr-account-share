@@ -33,8 +33,9 @@ public class MessageUtils {
         return new EmbedBuilder().setTitle("Help commands")
                 .addField("?share <plataforma> <login> <senha> <temAutenticador?True ou False>",
                         "Registra a conta na base de dados.", false)
-                .addField("?buscar <Plataforma>", "Busca a conta da plataforma desejada", false)
+                .addField("?find <Plataforma>", "Busca a conta da plataforma desejada", false)
                 .addField("?help", "Mostra os comandos do bot", false)
+                .addField("?list","Lista todas as plataformas cadastradas",false)
                 .setColor(Color.YELLOW)
                 .setThumbnail("https://cdn-icons-png.flaticon.com/512/1289/1289376.png")
                 .build();
