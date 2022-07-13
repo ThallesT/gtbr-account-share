@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -35,5 +36,10 @@ public class AccountShareService {
         return accountShareRepository.findByPlatform(platform).orElseThrow(() -> {
             throw new ObjectNotFoundException(Constants.ERROR_MESSAGE);
         });
+    }
+
+    public List<AccountShare> findAll(){
+        List<AccountShare> accountShareList = (List<AccountShare>) accountShareRepository.findAll();
+        return accountShareList;
     }
 }

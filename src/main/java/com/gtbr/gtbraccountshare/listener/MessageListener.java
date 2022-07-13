@@ -10,8 +10,8 @@ import java.util.Locale;
 
 public class MessageListener extends ListenerAdapter {
 
-    private final Long idGTBRRole = 607326526312284162L;
-    private final String prefix = "?";
+    private static final Long idGTBRRole = 607326526312284162L;
+    private static final String prefix = "?";
 
     private final CommandHandler commandHandler;
 
