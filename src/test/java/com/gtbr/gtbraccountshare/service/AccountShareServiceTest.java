@@ -4,13 +4,14 @@ import com.gtbr.gtbraccountshare.exception.ObjectNotFoundException;
 import com.gtbr.gtbraccountshare.model.AccountShare;
 import com.gtbr.gtbraccountshare.repository.AccountShareRepository;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class AccountShareServiceTest {
 
@@ -19,7 +20,7 @@ class AccountShareServiceTest {
     private AccountShareService accountShareService;
 
 
-    public AccountShareServiceTest(){
+    public AccountShareServiceTest() {
         this.accountShareRepository = Mockito.mock(AccountShareRepository.class);
         this.accountShareService = new AccountShareService(this.accountShareRepository);
     }
@@ -32,8 +33,7 @@ class AccountShareServiceTest {
                 .build();
         Mockito.when(accountShareRepository.save(Mockito.any())).thenReturn(accountShare);
 
-
-        AccountShare createdAccountShare = accountShareService.createAccountShare("teste","teste", "teste", true, "teste");
+        AccountShare createdAccountShare = accountShareService.createAccountShare("teste", "teste", "teste", true, "teste");
 
         assertEquals(accountShare.getId(), createdAccountShare.getId());
     }
@@ -50,15 +50,24 @@ class AccountShareServiceTest {
         AccountShare accountShare = accountShareService.findPlatform(platform);
 
         assertEquals(teste.getPlatform(), accountShare.getPlatform());
-
     }
+
     @Test
-    void findPlatform_not_found(){
+    void findPlatform_not_found() {
         Mockito.when(accountShareRepository.findByPlatform("")).thenReturn(Optional.empty());
 
-        String message = assertThrows(ObjectNotFoundException.class,()-> {
+        String message = assertThrows(ObjectNotFoundException.class, () -> {
             accountShareService.findPlatform("");
         }).getMessage();
         assertEquals("Esta plataforma nao foi cadastrada ainda.", message);
     }
+
+    @Test
+    void findAll() {
+        List<AccountShare> test = List.of(new AccountShare());
+        Mockito.when(accountShareRepository.findAll()).thenReturn(test);
+        List <AccountShare> accountShare = accountShareService.findAll();
+        assertEquals(test.get(0).getId(),accountShare.get(0).getId());
+    }
+
 }

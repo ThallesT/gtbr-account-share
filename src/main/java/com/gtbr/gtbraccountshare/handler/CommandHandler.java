@@ -2,6 +2,7 @@ package com.gtbr.gtbraccountshare.handler;
 
 import com.gtbr.gtbraccountshare.exception.CommandException;
 import com.gtbr.gtbraccountshare.model.AccountShare;
+import com.gtbr.gtbraccountshare.repository.AccountShareRepository;
 import com.gtbr.gtbraccountshare.service.AccountShareService;
 import com.gtbr.gtbraccountshare.service.RequestService;
 import com.gtbr.gtbraccountshare.service.ThumbnailsService;
@@ -39,7 +40,8 @@ public class CommandHandler {
                 case "share" -> shareHandle(fullMessage, messageReceivedEvent);
                 case "find" -> buscarHandle(fullMessage, messageReceivedEvent, jda);
                 case "help" -> helpHandle(messageReceivedEvent);
-                case "list" -> listHandle();
+                case "list" -> listHandle(messageReceivedEvent);
+                //case "delete" -> ;
                 default -> messageReceivedEvent.getChannel()
                         .sendMessage("Esse comando não foi reconhecido, para receber ajuda use o comando: ```?help```")
                         .queue(message -> SleepUtils.sleep(20, message, messageReceivedEvent));
@@ -93,7 +95,11 @@ public class CommandHandler {
         messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed)
                 .queue(message -> SleepUtils.sleep(20, message, messageReceivedEvent));
     }
-    private void listHandle(){
-        accountShareService.findAll();
+    private void listHandle(MessageReceivedEvent messageReceivedEvent){
+        List<AccountShare> accountShareList =  accountShareService.findAll();
+        MessageEmbed messageEmbed = MessageUtils.buildListMessage(accountShareList);
+        messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed).queue(message -> SleepUtils.sleep(20, message, messageReceivedEvent));
     }
+
+
 }
