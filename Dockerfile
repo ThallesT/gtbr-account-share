@@ -1,10 +1,10 @@
 FROM maven AS build
 COPY src /home/app/src
 COPY pom.xml /home/app
-RUN mvn -f /home/app/pom.xml clean package
+RUN mvn -f /home/app/pom.xml clean package install
 
 FROM openjdk:17-alpine AS deploy
-WORKDIR /app
+WORKDIR /home/app/src
 EXPOSE 8080
-ADD ./target/gtbr-account-share-0.0.1-SNAPSHOT.jar .
+COPY --from=build /home/app/target/gtbr-account-share-0.0.1-SNAPSHOT.jar .
 ENTRYPOINT ["java", "-jar", "gtbr-account-share-0.0.1-SNAPSHOT.jar"]
