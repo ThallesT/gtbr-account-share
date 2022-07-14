@@ -13,4 +13,7 @@ public interface AccountShareRepository extends CrudRepository<AccountShare, UUI
 
     @Query("SELECT ac FROM AccountShare ac WHERE lower(ac.platform) = lower(:platform)")
     Optional<AccountShare> findByPlatform(String platform);
+
+    @Query("SELECT ac FROM AccountShare ac WHERE lower(ac.platform) = lower(:platform) AND ac.owner=:ownerID")
+    Optional<AccountShare> findByPlatformAndOwner(String platform,String ownerID);
 }

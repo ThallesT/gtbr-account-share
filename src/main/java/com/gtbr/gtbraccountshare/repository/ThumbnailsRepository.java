@@ -9,6 +9,6 @@ import java.util.UUID;
 
 public interface ThumbnailsRepository extends CrudRepository<Thumbnails, UUID> {
 
-    @Query ("SELECT t FROM Thumbnails t WHERE lower(t.platform) = lower(:platform) ")
+    @Query("SELECT t FROM Thumbnails t WHERE lower(t.platform) = lower(:platform) ")
     Optional<Thumbnails> findByPlatform(String platform);
 }

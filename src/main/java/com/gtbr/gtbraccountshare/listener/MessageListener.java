@@ -1,6 +1,7 @@
 package com.gtbr.gtbraccountshare.listener;
 
 import com.gtbr.gtbraccountshare.handler.CommandHandler;
+import com.gtbr.gtbraccountshare.utils.Constants;
 import net.dv8tion.jda.api.events.ReadyEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
@@ -11,7 +12,6 @@ import java.util.Locale;
 public class MessageListener extends ListenerAdapter {
 
     private static final Long idGTBRRole = 607326526312284162L;
-    private static final String prefix = "?";
 
     private final CommandHandler commandHandler;
 
@@ -24,10 +24,8 @@ public class MessageListener extends ListenerAdapter {
         var message = messageReceivedEvent.getMessage().getContentRaw();
         if (!messageReceivedEvent.getAuthor().isBot()
                 && messageReceivedEvent.getMember().getRoles().stream().anyMatch(role -> role.getIdLong() == idGTBRRole)
-                && message.toLowerCase(Locale.ROOT).startsWith(prefix)
-        ) {
-            commandHandler.handle(messageReceivedEvent);
-        }
+                && message.toLowerCase(Locale.ROOT).startsWith(Constants.PREFIX))
+        {commandHandler.handle(messageReceivedEvent);}
     }
 
     @Override

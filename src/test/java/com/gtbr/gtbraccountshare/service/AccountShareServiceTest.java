@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class AccountShareServiceTest {
 
@@ -66,8 +65,20 @@ class AccountShareServiceTest {
     void findAll() {
         List<AccountShare> test = List.of(new AccountShare());
         Mockito.when(accountShareRepository.findAll()).thenReturn(test);
-        List <AccountShare> accountShare = accountShareService.findAll();
-        assertEquals(test.get(0).getId(),accountShare.get(0).getId());
+        List<AccountShare> accountShare = accountShareService.findAll();
+        assertEquals(test.get(0).getId(), accountShare.get(0).getId());
     }
 
+    @Test
+    void deletePlatform_success() {
+        Optional<AccountShare> accountShareOptional = Optional.of(AccountShare.builder().id(UUID.randomUUID()).build());
+        Mockito.when(accountShareRepository.findByPlatformAndOwner("teste", "123")).thenReturn(accountShareOptional);
+
+        assertDoesNotThrow(() -> accountShareService.deletePlatform("teste","123"));
+    }
+
+    @Test
+    void deletePlatformNotFound(){
+        assertThrows(ObjectNotFoundException.class, () -> accountShareService.deletePlatform("",""));
+    }
 }

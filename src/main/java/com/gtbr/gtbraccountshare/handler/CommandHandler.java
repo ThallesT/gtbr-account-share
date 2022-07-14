@@ -2,7 +2,6 @@ package com.gtbr.gtbraccountshare.handler;
 
 import com.gtbr.gtbraccountshare.exception.CommandException;
 import com.gtbr.gtbraccountshare.model.AccountShare;
-import com.gtbr.gtbraccountshare.repository.AccountShareRepository;
 import com.gtbr.gtbraccountshare.service.AccountShareService;
 import com.gtbr.gtbraccountshare.service.RequestService;
 import com.gtbr.gtbraccountshare.service.ThumbnailsService;
@@ -41,13 +40,12 @@ public class CommandHandler {
                 case "find" -> buscarHandle(fullMessage, messageReceivedEvent, jda);
                 case "help" -> helpHandle(messageReceivedEvent);
                 case "list" -> listHandle(messageReceivedEvent);
-                //case "delete" -> ;
+                case "delete" -> deleteHandle(fullMessage, messageReceivedEvent);
                 default -> messageReceivedEvent.getChannel()
                         .sendMessage("Esse comando não foi reconhecido, para receber ajuda use o comando: ```?help```")
                         .queue(message -> SleepUtils.sleep(20, message, messageReceivedEvent));
             }
         } catch (RuntimeException exception) {
-            exception.printStackTrace();
             MessageEmbed messageEmbed = new EmbedBuilder().setTitle("Erro!").setDescription(exception.getMessage()).build();
 
             messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed)
@@ -64,8 +62,7 @@ public class CommandHandler {
                 messageSplitted[3],
                 messageReceivedEvent.getAuthor().getId(),
                 Boolean.getBoolean(messageSplitted[4]),
-                messageSplitted[1]
-        );
+                messageSplitted[1]);
         messageReceivedEvent.getMessage().delete().queue();
         messageReceivedEvent.getChannel().sendMessage("A conta foi salva com sucesso!")
                 .queue(message -> SleepUtils.sleep(1, message, messageReceivedEvent));
@@ -95,11 +92,18 @@ public class CommandHandler {
         messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed)
                 .queue(message -> SleepUtils.sleep(20, message, messageReceivedEvent));
     }
-    private void listHandle(MessageReceivedEvent messageReceivedEvent){
-        List<AccountShare> accountShareList =  accountShareService.findAll();
+
+    private void listHandle(MessageReceivedEvent messageReceivedEvent) {
+        List<AccountShare> accountShareList = accountShareService.findAll();
         MessageEmbed messageEmbed = MessageUtils.buildListMessage(accountShareList);
-        messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed).queue(message -> SleepUtils.sleep(20, message, messageReceivedEvent));
+        messageReceivedEvent.getChannel().sendMessageEmbeds(messageEmbed)
+                .queue(message -> SleepUtils.sleep(20, message, messageReceivedEvent));
     }
 
-
+    private void deleteHandle(String fullMessage, MessageReceivedEvent messageReceivedEvent) {
+        String platform = fullMessage.split(" ")[1];
+        accountShareService.deletePlatform(platform, messageReceivedEvent.getAuthor().getId());
+        messageReceivedEvent.getChannel().sendMessage("Plataforma deletada com sucesso!")
+                .queue(message -> SleepUtils.sleep(5, message, messageReceivedEvent));
+    }
 }
