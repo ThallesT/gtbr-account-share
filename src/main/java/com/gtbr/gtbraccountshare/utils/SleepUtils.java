@@ -6,9 +6,10 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import java.util.concurrent.TimeUnit;
 
 public class SleepUtils {
-    private SleepUtils(){
+    private SleepUtils() {
         throw new IllegalStateException("Utility class");
     }
+
     public static void sleep(Integer time, Message message, MessageReceivedEvent messageReceivedEvent) {
         try {
             TimeUnit.SECONDS.sleep(time);

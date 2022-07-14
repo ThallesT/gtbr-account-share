@@ -9,8 +9,6 @@ import org.springframework.stereotype.Component;
 @Configuration
 @Getter
 public class SpringConfiguration {
-
     @Value("${discord.token}")
     private String token;
-
 }

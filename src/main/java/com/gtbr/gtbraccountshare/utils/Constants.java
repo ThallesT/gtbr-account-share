@@ -11,4 +11,6 @@ public class Constants {
 
     public static final String IMAGE_LIST = "https://images.vexels.com/media/users/3/151869/isolated/preview" +
             "/767ca771755f4675d4063c03e17c8595-icone-de-lista-de-verificacao-medica.png";
-    }
+
+    public static final String PREFIX = "?";
+}
