@@ -44,7 +44,7 @@ class AccountShareServiceTest {
                 .id(UUID.randomUUID())
                 .platform(platform)
                 .build();
-        Mockito.when(accountShareRepository.findByPlatform(platform)).thenReturn(Optional.of(teste));
+        Mockito.when(accountShareRepository.findByPlatform(platform)).thenReturn(List.of(teste));
 
         AccountShare accountShare = accountShareService.findPlatform(platform);
 
@@ -53,7 +53,7 @@ class AccountShareServiceTest {
 
     @Test
     void findPlatform_not_found() {
-        Mockito.when(accountShareRepository.findByPlatform("")).thenReturn(Optional.empty());
+        Mockito.when(accountShareRepository.findByPlatform("")).thenReturn(List.of());
 
         String message = assertThrows(ObjectNotFoundException.class, () -> {
             accountShareService.findPlatform("");
@@ -71,8 +71,8 @@ class AccountShareServiceTest {
 
     @Test
     void deletePlatform_success() {
-        Optional<AccountShare> accountShareOptional = Optional.of(AccountShare.builder().id(UUID.randomUUID()).build());
-        Mockito.when(accountShareRepository.findByPlatformAndOwner("teste", "123")).thenReturn(accountShareOptional);
+        List<AccountShare> accountShareList = List.of(AccountShare.builder().id(UUID.randomUUID()).build());
+        Mockito.when(accountShareRepository.findByPlatformAndOwner("teste", "123")).thenReturn(accountShareList);
 
         assertDoesNotThrow(() -> accountShareService.deletePlatform("teste","123"));
     }

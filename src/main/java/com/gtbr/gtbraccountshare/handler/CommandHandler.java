@@ -37,7 +37,7 @@ public class CommandHandler {
         try {
             switch (command) {
                 case "share" -> shareHandle(fullMessage, messageReceivedEvent);
-                case "find" -> buscarHandle(fullMessage, messageReceivedEvent, jda);
+                case "find" -> findHandle(fullMessage, messageReceivedEvent, jda);
                 case "help" -> helpHandle(messageReceivedEvent);
                 case "list" -> listHandle(messageReceivedEvent);
                 case "delete" -> deleteHandle(fullMessage, messageReceivedEvent);
@@ -69,7 +69,7 @@ public class CommandHandler {
 
     }
 
-    private void buscarHandle(String fullMessage, MessageReceivedEvent messageReceivedEvent, JDA jda) {
+    private void findHandle(String fullMessage, MessageReceivedEvent messageReceivedEvent, JDA jda) {
         String platform = fullMessage.split(" ")[1];
         AccountShare accountShare = accountShareService.findPlatform(platform);
         requestService.createRequest(accountShare, messageReceivedEvent);
