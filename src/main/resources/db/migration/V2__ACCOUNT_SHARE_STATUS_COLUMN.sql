@@ -1,0 +1,1 @@
+ALTER TABLE account_share ADD status VARCHAR(20) default 'AVAILABLE'

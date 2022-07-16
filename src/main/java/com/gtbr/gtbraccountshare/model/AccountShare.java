@@ -1,14 +1,12 @@
 package com.gtbr.gtbraccountshare.model;
 
+import com.gtbr.gtbraccountshare.model.enums.AccountShareStatus;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -40,4 +38,9 @@ public class AccountShare {
 
     @Column
     private LocalDateTime createdAt;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private AccountShareStatus status;
+
 }

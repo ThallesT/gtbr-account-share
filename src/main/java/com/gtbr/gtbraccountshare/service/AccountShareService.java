@@ -2,6 +2,7 @@ package com.gtbr.gtbraccountshare.service;
 
 import com.gtbr.gtbraccountshare.exception.ObjectNotFoundException;
 import com.gtbr.gtbraccountshare.model.AccountShare;
+import com.gtbr.gtbraccountshare.model.enums.AccountShareStatus;
 import com.gtbr.gtbraccountshare.repository.AccountShareRepository;
 import com.gtbr.gtbraccountshare.utils.Constants;
 import lombok.RequiredArgsConstructor;
@@ -32,23 +33,29 @@ public class AccountShareService {
     }
 
     public AccountShare findPlatform(String platform) {
-        return accountShareRepository.findByPlatform(platform).orElseThrow(() -> {
+        List<AccountShare> accountShareList = accountShareRepository.findByPlatform(platform);
+
+        if (accountShareList.isEmpty()){
             throw new ObjectNotFoundException(Constants.ERROR_MESSAGE);
-        });
+        }
+
+        return accountShareList.get(0);
     }
 
     public List<AccountShare> findAll() {
-        List<AccountShare> accountShareList = (List<AccountShare>) accountShareRepository.findAll();
-        return accountShareList;
+        return accountShareRepository.findAll();
+
     }
 
     public void deletePlatform(String platform, String ownerId){
-        Optional<AccountShare> accountShareOptional = accountShareRepository.findByPlatformAndOwner(platform,ownerId);
+        List<AccountShare> accountShareList = accountShareRepository.findByPlatformAndOwner(platform,ownerId);
 
-        if (accountShareOptional.isEmpty())
+        if (accountShareList.isEmpty())
             throw new ObjectNotFoundException("Você não é o dono da plataforma para deleta-la");
         else{
-            accountShareRepository.delete(accountShareOptional.get());
+            AccountShare accountShare = accountShareList.get(0);
+            accountShare.setStatus(AccountShareStatus.UNAVAILABLE);
+            accountShareRepository.save(accountShare);
         }
     }
 }
