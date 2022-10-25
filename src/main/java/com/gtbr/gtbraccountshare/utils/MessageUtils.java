@@ -39,6 +39,7 @@ public class MessageUtils {
                 .addField("?find <Plataforma>", "Busca a conta da plataforma desejada", false)
                 .addField("?help", "Mostra os comandos do bot", false)
                 .addField("?list", "Lista todas as plataformas cadastradas", false)
+                .addField("?update","Atualiza todos os dados da plataforma selecionada",false)
                 .setColor(Color.YELLOW)
                 .setThumbnail("https://cdn-icons-png.flaticon.com/512/1289/1289376.png")
                 .build();

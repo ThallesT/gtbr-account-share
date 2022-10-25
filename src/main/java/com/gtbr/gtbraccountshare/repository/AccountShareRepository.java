@@ -19,4 +19,5 @@ public interface AccountShareRepository extends CrudRepository<AccountShare, UUI
 
     @Query("SELECT ac FROM AccountShare ac WHERE ac.status = 'AVAILABLE'")
     List<AccountShare> findAll();
+
 }

@@ -58,4 +58,19 @@ public class AccountShareService {
             accountShareRepository.save(accountShare);
         }
     }
+
+    public void updatePlatform(String platformUpdated,String username, String password, String ownerId, boolean authenticator, String platform){
+        var plataforma = findPlatform(platform);
+        AccountShare accountShare = AccountShare.builder()
+                .id(plataforma.getId())
+                .platform(platformUpdated)
+                .username(username)
+                .password(password)
+                .owner(ownerId)
+                .authenticator(authenticator)
+                .createdAt(LocalDateTime.now())
+                .status(AccountShareStatus.AVAILABLE)
+                .build();
+        accountShareRepository.save(accountShare);
+    }
 }

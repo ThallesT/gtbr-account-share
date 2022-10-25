@@ -41,6 +41,7 @@ public class CommandHandler {
                 case "help" -> helpHandle(messageReceivedEvent);
                 case "list" -> listHandle(messageReceivedEvent);
                 case "delete" -> deleteHandle(fullMessage, messageReceivedEvent);
+                case "update" -> updateHandle(fullMessage,messageReceivedEvent);
                 default -> messageReceivedEvent.getChannel()
                         .sendMessage("Esse comando não foi reconhecido, para receber ajuda use o comando: ```?help```")
                         .queue(message -> SleepUtils.sleep(20, message, messageReceivedEvent));
@@ -58,7 +59,8 @@ public class CommandHandler {
         if (messageSplitted.length < 4)
             throw new CommandException("Precisa preencher com todos os dados. ?share <plataforma> " +
                     "<login> <senha> <temAutenticador?True:False>");
-        accountShareService.createAccountShare(messageSplitted[2],
+        accountShareService.createAccountShare(
+                messageSplitted[2],
                 messageSplitted[3],
                 messageReceivedEvent.getAuthor().getId(),
                 Boolean.getBoolean(messageSplitted[4]),
@@ -105,5 +107,19 @@ public class CommandHandler {
         accountShareService.deletePlatform(platform, messageReceivedEvent.getAuthor().getId());
         messageReceivedEvent.getChannel().sendMessage("Plataforma deletada com sucesso!")
                 .queue(message -> SleepUtils.sleep(5, message, messageReceivedEvent));
+    }
+
+    private void updateHandle(String fulllMessage, MessageReceivedEvent messageReceivedEvent){
+        String[] messageSplitted = fulllMessage.split(" ");
+        accountShareService.updatePlatform(
+                messageSplitted[2],
+                messageSplitted[3],
+                messageSplitted[4],
+                messageReceivedEvent.getAuthor().getId(),
+                Boolean.getBoolean(messageSplitted[5]),
+                messageSplitted[1]);
+        messageReceivedEvent.getChannel().sendMessage("Plataforma atualizada com sucesso!")
+                .queue(message-> SleepUtils.sleep(5,message,messageReceivedEvent));
+
     }
 }
