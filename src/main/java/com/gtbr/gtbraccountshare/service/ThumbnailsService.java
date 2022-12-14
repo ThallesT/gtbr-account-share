@@ -18,4 +18,14 @@ public class ThumbnailsService {
                 .orElse(Thumbnails.builder()
                         .imageUrl("https://www.oversodoinverso.com.br/wp-content/uploads/2020/08/template.png").build());
     }
+
+    public Thumbnails createThumbnail(String platform, String imageUrl) {
+        var platformAtt = findThumbnail(platform);
+        Thumbnails thumbnails = Thumbnails.builder()
+                .id(platformAtt.getId())
+                .imageUrl(imageUrl)
+                .platform(platform)
+                .build();
+        return thumbnailsRepository.save(thumbnails);
+    }
 }
