@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -35,7 +34,7 @@ public class AccountShareService {
     public AccountShare findPlatform(String platform) {
         List<AccountShare> accountShareList = accountShareRepository.findByPlatform(platform);
 
-        if (accountShareList.isEmpty()){
+        if (accountShareList.isEmpty()) {
             throw new ObjectNotFoundException(Constants.ERROR_MESSAGE);
         }
 
@@ -47,19 +46,19 @@ public class AccountShareService {
 
     }
 
-    public void deletePlatform(String platform, String ownerId){
-        List<AccountShare> accountShareList = accountShareRepository.findByPlatformAndOwner(platform,ownerId);
+    public void deletePlatform(String platform, String ownerId) {
+        List<AccountShare> accountShareList = accountShareRepository.findByPlatformAndOwner(platform, ownerId);
 
         if (accountShareList.isEmpty())
             throw new ObjectNotFoundException("Você não é o dono da plataforma para deleta-la");
-        else{
+        else {
             AccountShare accountShare = accountShareList.get(0);
             accountShare.setStatus(AccountShareStatus.UNAVAILABLE);
             accountShareRepository.save(accountShare);
         }
     }
 
-    public void updatePlatform(String platformUpdated,String username, String password, String ownerId, boolean authenticator, String platform){
+    public void updatePlatform(String platformUpdated, String username, String password, String ownerId, boolean authenticator, String platform) {
         var plataforma = findPlatform(platform);
         AccountShare accountShare = AccountShare.builder()
                 .id(plataforma.getId())

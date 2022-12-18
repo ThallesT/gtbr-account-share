@@ -41,7 +41,8 @@ public class CommandHandler {
                 case "help" -> helpHandle(messageReceivedEvent);
                 case "list" -> listHandle(messageReceivedEvent);
                 case "delete" -> deleteHandle(fullMessage, messageReceivedEvent);
-                case "update" -> updateHandle(fullMessage,messageReceivedEvent);
+                case "update" -> updateHandle(fullMessage, messageReceivedEvent);
+                case "setthumb" -> createThumbnail(fullMessage, messageReceivedEvent);
                 default -> messageReceivedEvent.getChannel()
                         .sendMessage("Esse comando não foi reconhecido, para receber ajuda use o comando: ```?help```")
                         .queue(message -> SleepUtils.sleep(20, message, messageReceivedEvent));
@@ -109,17 +110,33 @@ public class CommandHandler {
                 .queue(message -> SleepUtils.sleep(5, message, messageReceivedEvent));
     }
 
-    private void updateHandle(String fulllMessage, MessageReceivedEvent messageReceivedEvent){
-        String[] messageSplitted = fulllMessage.split(" ");
-        accountShareService.updatePlatform(
-                messageSplitted[2],
-                messageSplitted[3],
-                messageSplitted[4],
-                messageReceivedEvent.getAuthor().getId(),
-                Boolean.getBoolean(messageSplitted[5]),
-                messageSplitted[1]);
-        messageReceivedEvent.getChannel().sendMessage("Plataforma atualizada com sucesso!")
-                .queue(message-> SleepUtils.sleep(5,message,messageReceivedEvent));
+    private void updateHandle(String fulllMessage, MessageReceivedEvent messageReceivedEvent) {
+        try {
+            String[] messageSplitted = fulllMessage.split(" ");
+            accountShareService.updatePlatform(
+                    messageSplitted[2],
+                    messageSplitted[3],
+                    messageSplitted[4],
+                    messageReceivedEvent.getAuthor().getId(),
+                    Boolean.getBoolean(messageSplitted[5]),
+                    messageSplitted[1]);
+            messageReceivedEvent.getChannel().sendMessage("Plataforma atualizada com sucesso!")
+                    .queue(message -> SleepUtils.sleep(7, message, messageReceivedEvent));
+        } catch (Exception e) {
+            throw new CommandException("É necessário preencher os dados da seguinte forma: ?update <plataforma atual> <nova plataforma> <login> <senha> <temAutenticador?'true' ou 'false'>");
 
+        }
+    }
+
+    private void createThumbnail(String fullMessage, MessageReceivedEvent messageReceivedEvent) {
+        try {
+            String platform = fullMessage.split(" ")[2];
+            String imageUrl = fullMessage.split(" ")[1];
+            thumbnailsService.createThumbnail(platform, imageUrl);
+            messageReceivedEvent.getChannel().sendMessage("Thumbnail cadastrada com sucesso!")
+                    .queue(message -> SleepUtils.sleep(7, message, messageReceivedEvent));
+        } catch (Exception e) {
+            throw new CommandException("Não foi possivel cadastrar a thumbnail!");
+        }
     }
 }
