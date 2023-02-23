@@ -2,8 +2,10 @@ package com.gtbr.gtbraccountshare.service;
 
 import com.gtbr.gtbraccountshare.exception.ObjectNotFoundException;
 import com.gtbr.gtbraccountshare.model.AccountShare;
+import com.gtbr.gtbraccountshare.model.Thumbnails;
 import com.gtbr.gtbraccountshare.model.enums.AccountShareStatus;
 import com.gtbr.gtbraccountshare.repository.AccountShareRepository;
+import com.gtbr.gtbraccountshare.repository.ThumbnailsRepository;
 import com.gtbr.gtbraccountshare.utils.Constants;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.UUID;
 public class AccountShareService {
 
     private final AccountShareRepository accountShareRepository;
+    private final ThumbnailsRepository thumbnailsRepository;
 
     public AccountShare createAccountShare(String username, String password, String owner, boolean authenticator, String platform) {
         AccountShare accountShare = AccountShare.builder()
@@ -27,7 +30,14 @@ public class AccountShareService {
                 .authenticator(authenticator)
                 .createdAt(LocalDateTime.now())
                 .platform(platform)
+                .status(AccountShareStatus.AVAILABLE)
                 .build();
+        Thumbnails thumbnails = Thumbnails.builder()
+                .id(UUID.randomUUID())
+                .platform(accountShare.getPlatform())
+                .imageUrl("https://static.wikia.nocookie.net/liga-da-zueira-oficial/images/9/98/Pernalonga_png_e_gifs_1.png/revision/latest/scale-to-width-down/360?cb=20220728194852&path-prefix=pt-br")
+                .build();
+        thumbnailsRepository.save(thumbnails);
         return accountShareRepository.save(accountShare);
     }
 
