@@ -2,7 +2,9 @@ package com.gtbr.gtbraccountshare.service;
 
 import com.gtbr.gtbraccountshare.exception.ObjectNotFoundException;
 import com.gtbr.gtbraccountshare.model.AccountShare;
+import com.gtbr.gtbraccountshare.model.Thumbnails;
 import com.gtbr.gtbraccountshare.repository.AccountShareRepository;
+import com.gtbr.gtbraccountshare.repository.ThumbnailsRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -16,12 +18,18 @@ class AccountShareServiceTest {
 
     private AccountShareRepository accountShareRepository;
 
+    private ThumbnailsRepository thumbnailsRepository;
+
+    private ThumbnailsService thumbnailsService;
+
     private AccountShareService accountShareService;
 
 
     public AccountShareServiceTest() {
         this.accountShareRepository = Mockito.mock(AccountShareRepository.class);
-        this.accountShareService = new AccountShareService(this.accountShareRepository);
+        this.thumbnailsRepository = Mockito.mock(ThumbnailsRepository.class);
+        this.accountShareService = new AccountShareService(this.accountShareRepository, this.thumbnailsRepository);
+        this.thumbnailsService = new ThumbnailsService(this.thumbnailsRepository);
     }
 
     @Test
@@ -31,10 +39,17 @@ class AccountShareServiceTest {
                 .username("username teste")
                 .build();
         Mockito.when(accountShareRepository.save(Mockito.any())).thenReturn(accountShare);
+        Thumbnails thumbnails = Thumbnails.builder()
+                .platform("Plataforma teste")
+                .build();
+        Mockito.when(thumbnailsRepository.save(Mockito.any())).thenReturn(thumbnails);
 
         AccountShare createdAccountShare = accountShareService.createAccountShare("teste", "teste", "teste", true, "teste");
 
+        Thumbnails createThumbnails = thumbnailsService.createThumbnail("teste","teste");
+
         assertEquals(accountShare.getId(), createdAccountShare.getId());
+        assertEquals(thumbnails.getPlatform(), createThumbnails.getPlatform());
     }
 
     @Test
