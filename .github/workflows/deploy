@@ -1,0 +1,31 @@
+name: Deploy on GTBR Server
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Build and Push Image
+      run: |
+        docker build -t gtbr-account-share .
+        docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+        docker tag gtbr-account-share ${{ secrets.DOCKER_REGISTRY }}/gtbr-account-share
+        docker push ${{ secrets.DOCKER_REGISTRY }}/gtbr-account-share
+
+    - name: Deploy to GTBR Server
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SERVER_HOST }}
+        username: ${{ secrets.SERVER_USERNAME }}
+        password: ${{ secrets.SERVER_PASSWORD }}
+        script: |
+          docker stop gtbr-account-share || true
+          docker rm gtbr-account-share || true
+          docker pull ${{ secrets.DOCKER_REGISTRY }}/gtbr-account-share
+          docker run -d -e DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} -e URL=${{ secrets.DB_URL }} -e PASSWORD=${{ secrets.DB_PASSWORD }} -e USERNAME=${{ secrets.DB_USERNAME }} --name gtbr-account-share ${{ secrets.DOCKER_REGISTRY }}/gtbr-account-share
