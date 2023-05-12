@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${URL}
-    password: ${PASSWORD}
-    username: ${USERNAME}
+    url: ${DB_URL}
+    password: ${DB_PASSWORD}
+    username: ${DB_USERNAME}
     driver-class-name: org.postgresql.Driver
   main:
     allow-bean-definition-overriding: true
