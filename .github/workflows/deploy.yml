@@ -28,4 +28,4 @@ jobs:
           docker stop gtbr-account-share || true
           docker rm gtbr-account-share || true
           docker pull ${{ secrets.DOCKER_REGISTRY }}/gtbr-account-share
-          docker run -d -e DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} -e URL=${{ secrets.DB_URL }} -e PASSWORD=${{ secrets.DB_PASSWORD }} -e USERNAME=${{ secrets.DB_USERNAME }} --name gtbr-account-share ${{ secrets.DOCKER_REGISTRY }}/gtbr-account-share
+          docker run -d -e DISCORD_TOKEN=${{ secrets.DISCORD_TOKEN }} -e DB_URL=${{ secrets.DB_URL }} -e DB_PASSWORD=${{ secrets.DB_PASSWORD }} -e DB_USERNAME=${{ secrets.DB_USERNAME }} --name gtbr-account-share ${{ secrets.DOCKER_REGISTRY }}/gtbr-account-share
